@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RA Ultimate Cipher Analyzer Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 40px;
+            max-width: 800px;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h1 {
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 10px;
+        }
+        h2 {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+            margin-top: 20px;
+        }
+        h3 {
+            margin-top: 15px;
+        }
+        p {
+            margin: 10px 0;
+        }
+        ul, ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        li {
+            margin: 5px 0;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        code {
+            background-color: #f8f8f8;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: Consolas, monospace;
+        }
+        pre {
+            background-color: #f8f8f8;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .toc {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .toc ul {
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>RA Ultimate Cipher Analyzer Documentation</h1>
+
+    <div class="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#requirements">Requirements</a></li>
+            <li><a href="#installation">Installation</a></li>
+            <li><a href="#usage">Usage</a></li>
+            <li><a href="#technical-details">Technical Details</a></li>
+            <li><a href="#extending-the-tool">Extending the Tool</a></li>
+            <li><a href="#troubleshooting">Troubleshooting</a></li>
+            <li><a href="#license">License</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </div>
+
+    <section id="overview">
+        <h2>Overview</h2>
+        <p><strong>RA Ultimate Cipher Analyzer</strong> is a web-based tool designed to analyze encrypted files and suggest the encryption algorithm used based on statistical properties and known patterns. It calculates metrics such as entropy, byte distribution (chi-square test), and file size to identify characteristics of strong ciphers (e.g., AES, RSA) and weak ciphers (e.g., Caesar). The tool detects specific patterns associated with common encryption formats (e.g., OpenSSL, PGP/GPG) and handles Base64-encoded data, making it suitable for both binary and encoded files.</p>
+        <p>The tool provides a user-friendly interface for uploading files and displays detailed analysis results, including a table of expected entropy values for various ciphers. It is implemented as a PHP class (<code>RA_UltimateCipherAnalyzer</code>) for modularity and extensibility, making it ideal for cybersecurity professionals, developers, and researchers.</p>
+    </section>
+
+    <section id="features">
+        <h2>Features</h2>
+        <ul>
+            <li><strong>Entropy Calculation</strong>: Measures the randomness of file contents (in bits/byte) to distinguish between encrypted and unencrypted data.</li>
+            <li><strong>Byte Distribution Analysis</strong>: Uses the chi-square test to check for uniform byte distribution, typical of strong ciphers.</li>
+            <li><strong>Block Size Detection</strong>: Identifies possible block sizes (e.g., 16 bytes for AES) for block ciphers.</li>
+            <li><strong>Pattern Recognition</strong>: Detects signatures of common encryption formats (e.g., OpenSSL, RSA PKCS#1, encrypted ZIP).</li>
+            <li><strong>Base64 Support</strong>: Recognizes Base64-encoded files (common for RSA) and adjusts analysis heuristics.</li>
+            <li><strong>Entropy Table</strong>: Displays expected entropy ranges for various ciphers (e.g., AES, RSA, Caesar) alongside results.</li>
+            <li><strong>User-Friendly Interface</strong>: Simple HTML form for file uploads, with styled output including tables and lists.</li>
+            <li><strong>Object-Oriented Design</strong>: Implemented as a PHP class (<code>RA_UltimateCipherAnalyzer</code>) for modularity and maintainability.</li>
+        </ul>
+    </section>
+
+    <section id="requirements">
+        <h2>Requirements</h2>
+        <ul>
+            <li><strong>Web Server</strong>: Apache, Nginx, or any server supporting PHP.</li>
+            <li><strong>PHP</strong>: Version 7.0 or higher, with <code>file_uploads</code> enabled in <code>php.ini</code>.</li>
+            <li><strong>File System</strong>: A writable <code>uploads/</code> directory in the web server root.</li>
+            <li><strong>Browser</strong>: Any modern web browser (Chrome, Firefox, Safari, etc.) for accessing the interface.</li>
+        </ul>
+    </section>
+
+    <section id="installation">
+        <h2>Installation</h2>
+        <ol>
+            <li>
+                <strong>Set Up the Web Server</strong>:
+                <ul>
+                    <li>Install and configure a web server (e.g., Apache or Nginx).</li>
+                    <li>Ensure PHP is installed and configured with:
+                        <ul>
+                            <li><code>file_uploads = On</code> in <code>php.ini</code>.</li>
+                            <li><code>upload_max_filesize</code> and <code>post_max_size</code> set to at least 16 KB to handle typical encrypted files.</li>
+                        </ul>
+                    </li>
+                    <li>Verify that the server has write permissions for the <code>uploads/</code> directory.</li>
+                </ul>
+            </li>
+            <li>
+                <strong>Create the Uploads Directory</strong>:
+                <ul>
+                    <li>Create a directory named <code>uploads/</code> in the web server root (e.g., <code>/var/www/html/uploads/</code>).</li>
+                    <li>Set permissions to allow writing (e.g., <code>chmod 755 uploads</code> on Linux).</li>
+                </ul>
+            </li>
+            <li>
+                <strong>Deploy the Tool</strong>:
+                <ul>
+                    <li>Copy the following files to the web server root:
+                        <ul>
+                            <li><code>index.php</code>: The user interface for file uploads.</li>
+                            <li><code>RA_UltimateCipherAnalyzer.php</code>: The analysis logic implemented in the <code>RA_UltimateCipherAnalyzer</code> class.</li>
+                        </ul>
+                    </li>
+                    <li>Ensure both files are readable by the web server (e.g., <code>chmod 644 index.html RA_UltimateCipherAnalyzer.php</code>).</li>
+                </ul>
+            </li>
+            <li>
+                <strong>Test the Installation</strong>:
+                <ul>
+                    <li>Access <code>http://&lt;server-address&gt;/index.php</code> in a browser.</li>
+                    <li>Upload a test file (e.g., an AES-encrypted binary file or an RSA-encrypted Base64 file) to verify that the tool processes it correctly.</li>
+                </ul>
+            </li>
+        </ol>
+    </section>
+
+    <section id="usage">
+        <h2>Usage</h2>
+        <ol>
+            <li>
+                <strong>Access the Tool</strong>:
+                <p>Open <code>http://&lt;server-address&gt;/index.php</code> in a web browser. The interface displays a form with a file input and an "Analyze" button.</p>
+            </li>
+            <li>
+                <strong>Upload a File</strong>:
+                <p>Click "Select a file" to choose an encrypted file (e.g., <code>.txt</code>, <code>.bin</code>, or any extension). Click "Analyze" to submit the file for analysis.</p>
+            </li>
+            <li>
+                <strong>View Results</strong>:
+                <p>The tool processes the file and displays results in a list, including:</p>
+                <ul>
+                    <li>Detected format (e.g., Base64).</li>
+                    <li>Entropy (in bits/byte).</li>
+                    <li>Chi-square value and distribution analysis (for non-Base64 files).</li>
+                    <li>Possible block size (for block ciphers).</li>
+                    <li>Known patterns (e.g., OpenSSL, RSA PKCS#1).</li>
+                    <li>File size.</li>
+                </ul>
+                <p>Below the results, a table lists expected entropy ranges for common ciphers (e.g., AES: 7.9-8.0, RSA Base64: 5.5-6.0).</p>
+            </li>
+            <li>
+                <strong>Interpret Results</strong>:
+                <p>Compare the reported entropy with the expected ranges in the table. Check for patterns to identify specific encryption tools (e.g., <code>Salted__</code> for OpenSSL). Note warnings (e.g., small file size) that may affect reliability.</p>
+            </li>
+            <li>
+                <strong>Example Outputs</strong>:
+                <h3>AES-encrypted file (14640 bytes, binary)</h3>
+                <pre>
+Analysis Results:
+- Entropy: 7.99 bits/byte
+- High entropy: likely encrypted with a secure algorithm (e.g., AES, RSA)
+- Chi-square: 256.72
+- Uniform distribution: typical of strong ciphers
+- Possible block encryption with 16 bytes (likely AES)
+- File size: 14640 bytes
+                </pre>
+                <h3>RSA-encrypted file (344 bytes, Base64)</h3>
+                <pre>
+Analysis Results:
+- Format detected: Base64
+- Warning: File is too small (&lt;1 KB), results may be unreliable
+- Entropy: 5.89 bits/byte
+- High entropy for Base64: likely encrypted with a secure algorithm (e.g., RSA)
+- Non-uniform distribution (expected for Base64): not applicable for cipher analysis
+- Data in Base64 format: entropy and distribution reflect encoding, not encryption
+- Not applicable: RSA does not use block encryption (Base64 data)
+- File size: 344 bytes
+                </pre>
+                <p>Both outputs include the entropy table for reference.</p>
+            </li>
+        </ol>
+    </section>
+
+    <section id="technical-details">
+        <h2>Technical Details</h2>
+        <h3>Class Structure</h3>
+        <p>The tool is implemented in a single PHP class, <code>RA_UltimateCipherAnalyzer</code>, with the following methods:</p>
+        <ul>
+            <li><strong>Private Methods</strong>:
+                <ul>
+                    <li><code>isBase64($data)</code>: Checks if the input data is valid Base64.</li>
+                    <li><code>calculateEntropy($data)</code>: Computes the Shannon entropy of the file (in bits/byte).</li>
+                    <li><code>byteDistribution($data)</code>: Performs a chi-square test to analyze byte distribution.</li>
+                    <li><code>checkForKnownPatterns($data, $isBase64)</code>: Searches for signatures of common encryption formats.</li>
+                    <li><code>checkBlockSize($fileSize, $entropy, $isBase64)</code>: Identifies possible block sizes for block ciphers.</li>
+                    <li><code>analyzeFile($filePath)</code>: Coordinates the analysis process, returning a list of suggestions.</li>
+                    <li><code>renderEntropyTable()</code>: Generates an HTML table of expected entropy values.</li>
+                </ul>
+            </li>
+            <li><strong>Public Method</strong>:
+                <ul>
+                    <li><code>processFile($file)</code>: Handles file uploads, performs analysis, and returns HTML output.</li>
+                </ul>
+            </li>
+            <li><strong>Properties</strong>:
+                <ul>
+                    <li><code>$entropyTable</code>: An array containing expected entropy ranges for various ciphers.</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h3>Analysis Metrics</h3>
+        <ul>
+            <li><strong>Entropy</strong>: Measured in bits/byte (max 8.0). High entropy (&gt;7.9 for binary, &gt;5.5 for Base64) indicates a strong cipher.</li>
+            <li><strong>Chi-square Test</strong>: Compares byte distribution to a uniform distribution (threshold 293.25 for 255 degrees of freedom, 5% significance). Applied only to non-Base64 files.</li>
+            <li><strong>Block Size</strong>: Checks if file size is a multiple of common block sizes (16, 8, 32 bytes). Prioritizes 16 bytes for high-entropy files (likely AES).</li>
+            <li><strong>Patterns</strong>: Recognizes signatures like <code>Salted__</code> (OpenSSL), <code>\x30\x82</code> (RSA PKCS#1), and others.</li>
+        </ul>
+
+        <h3>Supported Ciphers and Formats</h3>
+        <ul>
+            <li><strong>Symmetric Ciphers</strong>: AES, DES, Triple DES, Blowfish.</li>
+            <li><strong>Asymmetric Ciphers</strong>: RSA, ElGamal.</li>
+            <li><strong>Weak Ciphers</strong>: Caesar.</li>
+            <li><strong>Compressed/Encrypted Formats</strong>: ZIP, RAR, PDF.</li>
+            <li><strong>Other</strong>: Plaintext (English, source code), compressed data.</li>
+        </ul>
+
+        <h3>Known Patterns</h3>
+        <ul>
+            <li><strong>OpenSSL</strong>: <code>Salted__</code> (for symmetric ciphers with passwords).</li>
+            <li><strong>PGP/GPG</strong>: <code>\x99\x01</code>, <code>\x85\x02</code> (for encrypted messages or keys).</li>
+            <li><strong>RSA (PKCS#1)</strong>: <code>\x30\x82</code> (in binary or decoded Base64).</li>
+            <li><strong>PEM</strong>: <code>-----BEGIN ENCRYPTED DATA-----</code>, <code>-----BEGIN RSA PRIVATE KEY-----</code>.</li>
+            <li><strong>Encrypted ZIP</strong>: <code>PK\x03\x04</code> with encryption bit set.</li>
+            <li><strong>Encrypted RAR</strong>: <code>Rar!\x1A\x07\x01\x00</code>.</li>
+            <li><strong>Encrypted PDF</strong>: <code>%PDF-</code> with <code>/Encrypt</code> metadata.</li>
+        </ul>
+
+        <h3>Base64 Handling</h3>
+        <ul>
+            <li>Detects Base64 format using a regular expression and <code>base64_decode</code>.</li>
+            <li>Adjusts entropy threshold (&gt;5.5) and skips chi-square and block size tests for Base64 files.</li>
+            <li>Decodes Base64 to check for patterns (e.g., RSA PKCS#1).</li>
+        </ul>
+
+        <h3>Entropy Table</h3>
+        <p>The tool includes a table of expected entropy ranges for common ciphers and formats, displayed after each analysis:</p>
+        <table>
+            <tr>
+                <th>Cipher/Format</th>
+                <th>Output Format</th>
+                <th>Expected Entropy (bits/byte)</th>
+                <th>Notes</th>
+            </tr>
+            <tr>
+                <td>AES (128/192/256)</td>
+                <td>Binary</td>
+                <td>7.9 - 8.0</td>
+                <td>Strong cipher, uniform distribution, typical of random binary data.</td>
+            </tr>
+            <tr>
+                <td>AES (128/192/256)</td>
+                <td>Base64</td>
+                <td>5.5 - 6.0</td>
+                <td>Reduced by Base64, but high within this format's range.</td>
+            </tr>
+            <tr>
+                <td>DES</td>
+                <td>Binary</td>
+                <td>7.8 - 8.0</td>
+                <td>Less secure than AES, but still produces high entropy.</td>
+            </tr>
+            <tr>
+                <td>Triple DES (3DES)</td>
+                <td>Binary</td>
+                <td>7.8 - 8.0</td>
+                <td>Similar to DES, high entropy, but slower.</td>
+            </tr>
+            <tr>
+                <td>Blowfish</td>
+                <td>Binary</td>
+                <td>7.8 - 8.0</td>
+                <td>Strong symmetric cipher, similar to AES in randomness.</td>
+            </tr>
+            <tr>
+                <td>RSA</td>
+                <td>Binary</td>
+                <td>7.8 - 8.0</td>
+                <td>Encrypted data or keys in DER format, high randomness.</td>
+            </tr>
+            <tr>
+                <td>RSA</td>
+                <td>Base64</td>
+                <td>5.5 - 6.0</td>
+                <td>Common for keys or encrypted messages, entropy limited by Base64.</td>
+            </tr>
+            <tr>
+                <td>ElGamal</td>
+                <td>Binary</td>
+                <td>7.8 - 8.0</td>
+                <td>Asymmetric cipher, similar to RSA in randomness.</td>
+            </tr>
+            <tr>
+                <td>ElGamal</td>
+                <td>Base64</td>
+                <td>5.5 - 6.0</td>
+                <td>Similar to RSA in Base64.</td>
+            </tr>
+            <tr>
+                <td>Caesar Cipher</td>
+                <td>Plaintext</td>
+                <td>4.0 - 5.0</td>
+                <td>Weak cipher, entropy similar to plaintext (e.g., English).</td>
+            </tr>
+            <tr>
+                <td>Encrypted ZIP</td>
+                <td>Binary</td>
+                <td>7.5 - 8.0</td>
+                <td>Depends on internal algorithm (e.g., AES), but high entropy.</td>
+            </tr>
+            <tr>
+                <td>Encrypted RAR</td>
+                <td>Binary</td>
+                <td>7.5 - 8.0</td>
+                <td>Similar to ZIP, high entropy due to compression and encryption.</td>
+            </tr>
+            <tr>
+                <td>Encrypted PDF</td>
+                <td>Binary</td>
+                <td>6.5 - 7.5</td>
+                <td>Lower entropy due to metadata and PDF structure.</td>
+            </tr>
+            <tr>
+                <td>Plaintext (English)</td>
+                <td>Plaintext</td>
+                <td>4.0 - 5.0</td>
+                <td>Low entropy due to linguistic redundancy.</td>
+            </tr>
+            <tr>
+                <td>Plaintext (Source Code)</td>
+                <td>Plaintext</td>
+                <td>5.0 - 6.0</td>
+                <td>Higher entropy than natural text, but lower than encrypted data.</td>
+            </tr>
+            <tr>
+                <td>Compressed Data (Unencrypted)</td>
+                <td>Binary</td>
+                <td>6.5 - 7.5</td>
+                <td>High entropy due to compression, but lower than strong ciphers.</td>
+            </tr>
+        </table>
+    </section>
+
+    <section id="extending-the-tool">
+        <h2>Extending the Tool</h2>
+        <p>To add support for new ciphers or features:</p>
+        <ol>
+            <li>
+                <strong>Add New Patterns</strong>:
+                <p>Modify the <code>$patterns</code> array in <code>checkForKnownPatterns</code> to include new signatures (e.g., for a proprietary encryption format).</p>
+                <p>Example: <code>$patterns['NewCipher'] = strpos($data, "\xFF\x00") === 0;</code></p>
+            </li>
+            <li>
+                <strong>Update Entropy Table</strong>:
+                <p>Add new entries to the <code>$entropyTable</code> property for new ciphers or formats.</p>
+                <p>Example: <code>["NewCipher", "Binary", "7.8 - 8.0", "Description of new cipher."]</code></p>
+            </li>
+            <li>
+                <strong>Add New Heuristics</strong>:
+                <p>Extend <code>analyzeFile</code> to include additional metrics (e.g., detecting AES modes like CBC vs. ECB).</p>
+                <p>Example: Analyze block repetition for ECB detection.</p>
+            </li>
+            <li>
+                <strong>Enhance the Interface</strong>:
+                <p>Modify <code>index.php</code> to add branding (e.g., a logo) or new input options.</p>
+                <p>Add a download button in <code>processFile</code> to export results as a PDF or text file.</p>
+            </li>
+        </ol>
+    </section>
+
+    <section id="troubleshooting">
+        <h2>Troubleshooting</h2>
+        <ul>
+            <li>
+                <strong>File Upload Errors</strong>:
+                <ul>
+                    <li>Check <code>php.ini</code> for <code>file_uploads = On</code> and sufficient <code>upload_max_filesize</code>.</li>
+                    <li>Ensure the <code>uploads/</code> directory exists and is writable.</li>
+                </ul>
+            </li>
+            <li>
+                <strong>Incorrect Results</strong>:
+                <ul>
+                    <li>For small files (&lt;1024 bytes), results may be less reliable due to limited data.</li>
+                    <li>Verify the file format (binary vs. Base64) and compare entropy with the provided table.</li>
+                    <li>Share details about the encryption tool used (e.g., OpenSSL command) for pattern refinement.</li>
+                </ul>
+            </li>
+            <li>
+                <strong>Server Issues</strong>:
+                <ul>
+                    <li>Clear server cache (e.g., OPcache) if changes to <code>RA_UltimateCipherAnalyzer.php</code> are not reflected.</li>
+                    <li>Check file permissions (<code>index.php</code>, <code>RA_UltimateCipherAnalyzer.php</code>, <code>uploads/</code>).</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <section id="license">
+        <h2>License</h2>
+        <p>The <strong>RA Ultimate Cipher Analyzer</strong> is provided as-is for educational and research purposes. Users are responsible for ensuring compliance with applicable laws and regulations when analyzing encrypted files.</p>
+    </section>
+
+    <section id="contact">
+        <h2>Contact</h2>
+        <p>For support or contributions, please contact me in ventics.com. Suggestions for new ciphers, patterns, or features are welcome.</p>
+    </section>
+</body>
+</html>
