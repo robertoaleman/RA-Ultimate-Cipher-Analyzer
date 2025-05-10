@@ -23,8 +23,8 @@ A web-based PHP tool to analyze encrypted files and suggest encryption algorithm
 ## Installation
 1. Set up a web server with PHP 7.0+ and `file_uploads = On`.
 2. Create a writable `uploads/` directory (e.g., `chmod 755 uploads`).
-3. Copy `index.html`, `analyze.php`, and `documentation.html` to the server root.
-4. Access `http://<server>/index.html` to use the tool.
+3. Copy `index.php`, `RA_UltimateCipherAnalyzer.php`, and `documentation.html` to the server root.
+4. Access `http://<server>/index.php` to use the tool.
 
 ## Usage
 - Upload an encrypted file via the web interface.
@@ -32,7 +32,7 @@ A web-based PHP tool to analyze encrypted files and suggest encryption algorithm
 - Compare entropy with the provided table (e.g., RSA Base64: 5.5-6.0 bits/byte).
 
 ## Documentation
-See [documentation.html](documentation.html) for detailed setup, usage, and technical details.
+See [RA_Ultimate_Cipher_Analyzer_Documentation.html](RA_Ultimate_Cipher_Analyzer_Documentation.html) for detailed setup, usage, and technical details.
 
 ## License
 Licensed under the AGPL. See [LICENSE](LICENSE) for details.
