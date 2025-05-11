@@ -1,6 +1,7 @@
 # RA Ultimate Cipher Analyzer
 RA Ultimate Cipher Analyzer is a web-based tool designed to analyze encrypted files and suggest the encryption algorithm used based on statistical heuristic analysis and known patterns. 
 
+Although it is impossible to know exactly what type of encryption may have been applied to a given file, RA Ultimate Cypher Analyzer manages to perform the necessary operations to detect the type of encryption applied to a given file, obtaining very good performance in the detection of known patterns and determined by its library of patterns that can be expanded according to the documentation.
 
 RA Ultimate Cipher Analyzer is a web-based tool designed to analyze encrypted files and suggest the encryption algorithm used based on statistical properties and known patterns. It calculates metrics such as entropy, byte distribution (chi-square test), and file size to identify characteristics of strong ciphers (e.g., AES, RSA) and weak ciphers (e.g., Caesar). The tool detects specific patterns associated with common encryption formats (e.g., OpenSSL, PGP/GPG) and handles Base64-encoded data, making it suitable for both binary and encoded files.
 
