@@ -38,5 +38,13 @@ See [RA_Ultimate_Cipher_Analyzer_Documentation.html](RA_Ultimate_Cipher_Analyzer
 ## License
 Licensed under the AGPL. See [LICENSE](LICENSE) for details.
 
+**IMPORTANT: PLEASE READ CAREFULLY BEFORE USING THIS TOOL** This tool, RA Ultimate Cipher Analyzer, is provided 
+
+**solely for educational, research, and authorized security testing purposes.** It is intended to assist security professionals and researchers in analyzing encrypted files with proper permission. 
+
+**USE OF THIS TOOL FOR ANY ILLEGAL OR UNAUTHORIZED ACTIVITY IS STRICTLY PROHIBITED.** The developer is not responsible for any misuse of this tool. 
+
+**YOU ASSUME FULL RESPONSIBILITY** for the consequences of using this tool. The accuracy of cipher identification is not guaranteed, and results should be interpreted with caution. By using this tool, you agree to comply with all applicable laws and regulations and acknowledge that you have read and understood this disclaimer in its entirety. If you do not agree to these terms, please do not use this tool.
+
 ## Contact
 Issues or suggestions? Open an issue or contact ventics.com.
